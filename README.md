@@ -87,7 +87,7 @@ button {
 button:hover {
     background: #2ea043;
 }
-const backend = https://videogamemx.netlify.app/
+const backend = https://megawebstore-server.onrender.com
 
 let cart = [];
 
