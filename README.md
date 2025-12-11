@@ -87,7 +87,7 @@ button {
 button:hover {
     background: #2ea043;
 }
-const backend = https://github.com/videogamermxsoporte-ops/Videogamermx.git
+const backend = https://videogamemx.netlify.app/
 
 let cart = [];
 
