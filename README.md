@@ -87,7 +87,7 @@ button {
 button:hover {
     background: #2ea043;
 }
-const backend = "https://TU-BACKEND.onrender.com";  // <-- CAMBIA ESTO
+const backend = https://github.com/videogamermxsoporte-ops/Videogamermx.git
 
 let cart = [];
 
@@ -137,3 +137,62 @@ async function pay() {
         console.log(data);
     }
 }
+{
+  "name": "megawebstore-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "axios": "^1.6.0",
+    "crypto": "latest",
+    "cors": "^2.8.5"
+  }
+import express from "express";
+import axios from "axios";
+import cors from "cors";
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+const WOMPI_PRIVATE_KEY = process.env.WOMPI_PRIVATE_KEY;
+const REDIRECT_URL = process.env.REDIRECT_URL || "https://tu-netlify.netlify.app/pago";
+const WOMPI_URL = "https://production.wompi.co";
+
+app.post("/create-payment", async (req, res) => {
+    try {
+        const { amount } = req.body;
+
+        const charge = {
+            amount_in_cents: amount * 100,
+            currency: "COP",
+            customer_email: "cliente@example.com",
+            reference: "MEGAWEB-" + Date.now(),
+            redirect_url: REDIRECT_URL
+        };
+
+        const wompiRes = await axios.post(
+            `${WOMPI_URL}/v1/transactions`,
+            charge,
+            {
+                headers: {
+                    Authorization: `Bearer ${WOMPI_PRIVATE_KEY}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        const checkoutURL = wompiRes.data.data.payment_method.extra.async_payment_url;
+
+        return res.json({ url: checkoutURL });
+
+    } catch (err) {
+        console.error(err.response?.data || err.message);
+        return res.json({ error: err.response?.data || err.message });
+    }
+});
+
+app.listen(3000, () => console.log("Servidor corriendo en puerto 3000"));
